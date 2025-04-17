@@ -7,40 +7,33 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Калькулятор Соляра</h1>
-        <form id="solarForm">
-          <div class="input-group">
-            <label for="userName">Имя:</label>
-            <input type="text" id="userName" name="userName" required />
-          </div>
-    
-          <div class="input-group">
-            <label for="birthDateTime">Дата и время рождения:</label>
-            <input type="datetime-local" id="birthDateTime" name="birthDateTime" required />
-          </div>
-    
-          <div class="input-group">
-            <label for="birthCity">Город рождения:</label>
-            <input type="text" id="birthCity" name="birthCity" required />
-          </div>
-    
-          <div class="input-group">
-            <label for="residenceCity">Город проживания:</label>
-            <input type="text" id="residenceCity" name="residenceCity" required />
-          </div>
-    
-          <div class="input-group">
-            <label for="targetYear">Год Соляра:</label>
-            <input type="number" id="targetYear" name="targetYear" required />
-          </div>
-    
-          <button type="submit">Рассчитать</button>
-        </form>
-    
-        <div class="result" id="result" style="display: none;"></div>
-        <div class="error" id="error" style="display: none;"></div>
-      </div>
+<div class="container" style="padding: 20px;">
+    <h1>Калькулятор Соляра</h1>
+    <div class="input-group" style="margin-bottom: 15px;">
+        <label>Имя:</label>
+        <input type="text" id="userName" required style="width: 100%; padding: 8px;">
+    </div>
+    <div class="input-group" style="margin-bottom: 15px;">
+        <label>Дата и время рождения (местное):</label>
+        <input type="datetime-local" id="birthDateTime" required style="width: 100%; padding: 8px;">
+    </div>
+    <div class="input-group" style="margin-bottom: 15px;">
+        <label>Год для расчета Соляра:</label>
+        <input type="number" id="targetYear" min="1900" max="2100" required style="width: 100%; padding: 8px;">
+    </div>
+    <div class="input-group" style="margin-bottom: 15px;">
+        <label>Место рождения (город):</label>
+        <input type="text" id="birthCity" required style="width: 100%; padding: 8px;">
+    </div>
+    <div class="input-group" style="margin-bottom: 15px;">
+        <label>Место проживания (город):</label>
+        <input type="text" id="residenceCity" required style="width: 100%; padding: 8px;">
+    </div>
+    <button id="calculateBtn" style="padding: 10px; margin-top: 10px;">Рассчитать</button>
+    <div id="result" class="result" style="margin-top: 20px;"></div>
+    <div id="error" class="error" style="color: red; margin-top: 20px;"></div>
+</div>
+
 <script>
     document.getElementById('calculateBtn').addEventListener('click', async function() {
         const userName = document.getElementById('userName').value.trim();
