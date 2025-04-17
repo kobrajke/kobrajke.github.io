@@ -43,12 +43,12 @@
         const residenceCity = document.getElementById('residenceCity').value.trim();
     
         if (!userName || !birthDateTime || !targetYear || !birthCity || !residenceCity) {
-          showError('Заполните все поля');
+          showError('❌ Заполните все поля');
           return;
         }
 
         try {
-            const response = await fetch('https://visenya.pythonanywhere.com/calculate', {
+            const response = await fetch('https://ravnovec-bot.onrender.com/calculate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -72,7 +72,7 @@
                 showError(data.error || 'Ошибка расчета');
             }
         } catch (e) {
-            showError('Ошибка соединения с сервером');
+            showError('❌ Ошибка соединения с сервером');
         }
     });
 
