@@ -47,7 +47,7 @@
         }
 
         try {
-            const response = await fetch("http://localhost:8000/calculate", {
+            const response = await fetch("https://great-poets-argue.loca.lt", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userName, birthDateTime, targetYear, birthCity, residenceCity })
