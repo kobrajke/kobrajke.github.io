@@ -106,21 +106,22 @@ button:active {
 }
 
 .result, .error {
-  font-size: 16px;
-  padding: 14px 16px;
+  font-size: 15px;
+  padding: 16px 20px;
   border-radius: 10px;
-  margin-top: 16px;
-  white-space: pre-wrap;
-  line-height: 1.6;
+  margin: 20px auto 0 auto;
+  white-space: normal;
+  line-height: 1.5;
   background-color: #f4f6fa;
   border: 1px solid #d8e1ec;
   color: #333;
   width: 100%;
-  max-width: 100%;
-  display: none; /* важно! */
+  max-width: 460px; /* <= ограничим ширину */
+  display: none;
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-sizing: border-box;
 }
 
 .result.show,
