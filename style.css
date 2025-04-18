@@ -65,6 +65,8 @@ input[type="datetime-local"],
 input[type="number"],
 input[type="text"] {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 12px 14px;
   font-size: 16px;
   border: 1px solid var(--border-color);
@@ -113,6 +115,7 @@ button:active {
   background-color: #f4f6fa;
   border: 1px solid #d8e1ec;
   color: #333;
+  width: 100%;
   max-width: 100%;
   display: none; /* важно! */
   opacity: 0;
