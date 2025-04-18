@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Калькулятор Соляра</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+        *, *::before, *::after {
+          box-sizing: border-box;
+        }
+      </style>
 </head>
 <body>
     <div class="container">
@@ -92,7 +97,10 @@
     });
 
     function showResult(result) {
-        const html = `
+        const resultEl = document.getElementById('result');
+        const errorEl = document.getElementById('error');
+  
+        resultEl.innerHTML = `
             <h3>Результаты расчета:</h3>
             <p>Имя: ${result.user_name}</p>
             <p>Дата рождения: ${result.birth_date}</p>
@@ -102,24 +110,24 @@
             <p>Местное время: ${result.solar_date_local}</p>
             <p>1 дом Соляра: ${result.asc_house} дом Радикса (Натала)</p>
         `;
-        const resultElement = document.getElementById('result');
-        resultElement.innerHTML = html;
-        resultElement.classList.add('show');
-      
-        const errorElement = document.getElementById('error');
-        errorElement.classList.remove('show');
-        errorElement.style.display = 'none';
+
+        resultEl.classList.add('show');
+        resultEl.style.display = 'block';
+  
+        errorEl.classList.remove('show');
+        errorEl.style.display = 'none';
       }
-      
+  
       function showError(message) {
-        const errorElement = document.getElementById('error');
-        errorElement.textContent = `❌ Ошибка: ${message}`;
-        errorElement.classList.add('show');
-        errorElement.style.display = 'block';
-      
-        const resultElement = document.getElementById('result');
-        resultElement.classList.remove('show');
-        resultElement.style.display = 'none';
+        const errorEl = document.getElementById('error');
+        const resultEl = document.getElementById('result');
+  
+        errorEl.textContent = `❌ Ошибка: ${message}`;
+        errorEl.classList.add('show');
+        errorEl.style.display = 'block';
+  
+        resultEl.classList.remove('show');
+        resultEl.style.display = 'none';
       }
 </script>
 </body>
