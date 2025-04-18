@@ -129,6 +129,14 @@
         resultEl.classList.remove('show');
         resultEl.style.display = 'none';
       }
+      document.addEventListener('keydown', function (event) {
+        const isInputFocused = document.activeElement.tagName === 'INPUT';
+        if (isInputFocused && event.key === 'Enter') {
+          event.preventDefault();
+          document.getElementById('calculateBtn').click();
+        }
+      });
+
 </script>
 </body>
 </html>
