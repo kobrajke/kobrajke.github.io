@@ -35,6 +35,13 @@
 </div>
 
 <script>
+    const tg = window.Telegram?.WebApp;
+    tg?.expand();
+
+    // Установка тёмной темы, если активна в Telegram
+    if (tg?.colorScheme === "dark") {
+    document.body.classList.add("dark-theme");
+    }
     document.getElementById('calculateBtn').addEventListener('click', async function() {
         const userName = document.getElementById('userName').value.trim();
         const birthDateTime = document.getElementById('birthDateTime').value;
