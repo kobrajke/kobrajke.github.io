@@ -91,12 +91,9 @@
                 if (tg?.sendData) {
                     tg.sendData(JSON.stringify({
                       userName: userName,
-                      birthDateTime: birthDateTime,
-                      targetYear: targetYear,
-                      birthCity: birthCity,
-                      residenceCity: residenceCity
+                      result: data.result
                     }));
-                  }                  
+                  }                                  
             } else {
                 showError(data.error || 'Ошибка расчета');
             }
