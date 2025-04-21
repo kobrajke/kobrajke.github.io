@@ -88,17 +88,6 @@
             const data = await response.json();
             if (data.success) {
                 showResult(data.result);
-            
-                try {
-                    if (tg?.sendData) {
-                        tg.sendData(JSON.stringify({
-                            userName: userName,
-                            result: data.result
-                        }));
-                    }
-                } catch (e) {
-                    console.error("Ошибка при отправке tg.sendData:", e);
-                }                
             } else {
                 showError(data.error || 'Ошибка расчета');
             }
@@ -127,6 +116,11 @@
   
         errorEl.classList.remove('show');
         errorEl.style.display = 'none';
+
+            // 🔽 Вот сюда ДОБАВЛЯЕМ отправку данных в Telegram
+        if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.sendData(JSON.stringify(result));
+        }
       }
   
       function showError(message) {
