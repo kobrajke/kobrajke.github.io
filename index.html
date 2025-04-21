@@ -88,6 +88,15 @@
             const data = await response.json();
             if (data.success) {
                 showResult(data.result);
+                if (tg?.sendData) {
+                    tg.sendData(JSON.stringify({
+                      userName: userName,
+                      birthDateTime: birthDateTime,
+                      targetYear: targetYear,
+                      birthCity: birthCity,
+                      residenceCity: residenceCity
+                    }));
+                  }                  
             } else {
                 showError(data.error || 'Ошибка расчета');
             }
@@ -135,24 +144,8 @@
           event.preventDefault();
           document.getElementById('calculateBtn').click();
         }
-        
-        // ⬇️ Отправляем результат как сообщение в Telegram
-        const telegramMessage = `
-    🌞 <b>Результат расчета Соляра</b>
+      });
 
-    <b>Имя:</b> ${result.user_name}
-    <b>Дата рождения:</b> ${result.birth_date}
-    <b>Город рождения:</b> ${result.birth_city}
-    <b>Город проживания:</b> ${result.residence_city}
-    <b>Соляр (UTC):</b> ${result.solar_date_utc}
-    <b>Местное время:</b> ${result.solar_date_local}
-    <b>1 дом Соляра:</b> ${result.asc_house} дом Радикса (Натала)
-        `.trim();
-
-        if (window.Telegram?.WebApp?.sendData) {
-            window.Telegram.WebApp.sendData(telegramMessage);
-        }
-    });
 </script>
 </body>
 </html>
