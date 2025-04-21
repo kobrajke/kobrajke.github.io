@@ -88,12 +88,17 @@
             const data = await response.json();
             if (data.success) {
                 showResult(data.result);
-                if (tg?.sendData) {
-                    tg.sendData(JSON.stringify({
-                      userName: userName,
-                      result: data.result
-                    }));
-                  }                                  
+            
+                try {
+                    if (tg?.sendData) {
+                        tg.sendData(JSON.stringify({
+                            userName: userName,
+                            result: data.result
+                        }));
+                    }
+                } catch (e) {
+                    console.error("Ошибка при отправке tg.sendData:", e);
+                }                
             } else {
                 showError(data.error || 'Ошибка расчета');
             }
