@@ -117,10 +117,22 @@
         errorEl.classList.remove('show');
         errorEl.style.display = 'none';
 
-            // 🔽 Вот сюда ДОБАВЛЯЕМ отправку данных в Telegram
-        if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.sendData(JSON.stringify(result));
-        }
+          // 📨 Отправка результата в Telegram через WebApp
+        const message = `
+        🌞 <b>Результаты расчета Соляра</b>
+        
+        <b>Имя:</b> ${result.user_name}
+        <b>Дата рождения:</b> ${result.birth_date}
+        <b>Место рождения:</b> ${result.birth_city}
+        <b>Место проживания:</b> ${result.residence_city}
+        <b>Соляр (UTC):</b> ${result.solar_date_utc}
+        <b>Местное время:</b> ${result.solar_date_local}
+        <b>1 дом Соляра:</b> ${result.asc_house} дом Радикса
+            `.trim();
+        
+            if (window.Telegram?.WebApp?.sendData) {
+            window.Telegram.WebApp.sendData(message);
+            }
       }
   
       function showError(message) {
