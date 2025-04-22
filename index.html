@@ -122,17 +122,22 @@
         errorEl.classList.remove('show');
         errorEl.style.display = 'none';
         
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbzvHm_xDUpe6ptKiJaQGw1sylrYYKXX6dzsGFAGZe06rOkcGr2LPUe6rfdLxzkKa-XK/exec";
-        const userId    = window.Telegram.WebApp.initDataUnsafe.user.id;
-        const ascHouse  = result.asc_house;
-        
-        fetch(scriptUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, asc_house: ascHouse })
-        })
-        .then(r => console.log("Apps Script ответ:", r.status));
-        
+        try {
+          const scriptUrl = "https://script.google.com/macros/s/AKfycbzvHm_xDUpe6ptKiJaQGw1sylrYYKXX6dzsGFAGZe06rOkcGr2LPUe6rfdLxzkKa-XK/exec"; // ← ВСТАВЬ СЮДА СВОЙ
+          const userId = window.Telegram.WebApp.initDataUnsafe?.user?.id;
+          const ascHouse = result.asc_house;
+      
+          if (userId && ascHouse !== undefined) {
+            fetch(scriptUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId, asc_house: ascHouse })
+            })
+            .then(r => console.log("📤 Отправлено в Google Apps Script:", r.status));
+          }
+        } catch (err) {
+          console.warn("❌ Ошибка отправки в Google Sheets:", err);
+        }
     }
   
       function showError(message) {
