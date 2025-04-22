@@ -122,12 +122,17 @@
         errorEl.classList.remove('show');
         errorEl.style.display = 'none';
         
-        if (window.Telegram?.WebApp?.sendData) {
-          const payload = {
-              asc_house: result.asc_house
-          };
-          window.Telegram.WebApp.sendData(JSON.stringify(payload));
-        }
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbzQEXn2ozMjr63ICkvmjwRjXATvwxwkS_rAgkwwXJbzdErIqCHtKLBK0JP9N3kd_Xir/exec";
+        const userId    = window.Telegram.WebApp.initDataUnsafe.user.id;
+        const ascHouse  = result.asc_house;
+        
+        fetch(scriptUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, asc_house: ascHouse })
+        })
+        .then(r => console.log("Apps Script ответ:", r.status));
+        
     }
   
       function showError(message) {
