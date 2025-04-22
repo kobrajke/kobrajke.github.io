@@ -134,15 +134,20 @@
           const userId = window.Telegram.WebApp.initDataUnsafe?.user?.id;
           const ascHouse = result.asc_house;
       
-          if (userId && ascHouse !== undefined) {
-            fetch(scriptUrl, {
-              method: "POST",
-              mode: "no-cors",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ userId, asc_house: ascHouse })
-            })
-            .then(r => console.log("📤 Отправлено в Google Apps Script:", r.status));
-          }
+          fetch(scriptUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ userId, asc_house: ascHouse })
+          })
+          .then(res => res.text())
+          .then(text => {
+            console.log("📩 Ответ от скрипта:", text);
+          })
+          .catch(err => {
+            console.error("❌ Ошибка при отправке:", err);
+          });
         } catch (err) {
           console.warn("❌ Ошибка отправки в Google Sheets:", err);
         }
