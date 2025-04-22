@@ -104,13 +104,6 @@
     function showResult(result) {
         const resultEl = document.getElementById('result');
         const errorEl = document.getElementById('error');
-    
-        // 🧪 Жесткая отладка
-        const userId = window.Telegram.WebApp.initDataUnsafe?.user?.id;
-        const ascHouse = result.asc_house;
-        console.log("🧪 Вызван showResult");
-        console.log("🧪 result.asc_house =", ascHouse);
-        console.log("🧪 userId из Telegram =", userId);
   
         resultEl.innerHTML = `
             <h3>Результаты расчета:</h3>
