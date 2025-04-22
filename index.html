@@ -116,24 +116,14 @@
   
         errorEl.classList.remove('show');
         errorEl.style.display = 'none';
-
-          // 📨 Отправка результата в Telegram через WebApp
-        const telegramMessage = `
-        🌞 <b>Результаты расчета Соляра</b>
         
-    <b>Имя:</b> ${result.user_name}
-    <b>Дата рождения:</b> ${result.birth_date}
-    <b>Город рождения:</b> ${result.birth_city}
-    <b>Город проживания:</b> ${result.residence_city}
-    <b>Соляр (UTC):</b> ${result.solar_date_utc}
-    <b>Местное время:</b> ${result.solar_date_local}
-    <b>1 дом Соляра:</b> ${result.asc_house} дом Радикса (Натала)
-            `.trim();
-        
-            if (window.Telegram?.WebApp?.sendData) {
-            window.Telegram.WebApp.sendData(telegramMessage);
-            }
-      }
+        if (window.Telegram?.WebApp?.sendData) {
+          const payload = {
+              asc_house: result.asc_house
+          };
+          window.Telegram.WebApp.sendData(JSON.stringify(payload));
+        }
+    }
   
       function showError(message) {
         const errorEl = document.getElementById('error');
