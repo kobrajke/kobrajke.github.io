@@ -130,33 +130,21 @@
         errorEl.style.display = 'none';
         
         try {
-          const scriptUrl = "https://script.google.com/macros/s/AKfycbzvHm_xDUpe6ptKiJaQGw1sylrYYKXX6dzsGFAGZe06rOkcGr2LPUe6rfdLxzkKa-XK/exec";
+          const scriptUrl = "https://script.google.com/macros/s/AKfycbzvHm_xDUpe6ptKiJaQGw1sylrYYKXX6dzsGFAGZe06rOkcGr2LPUe6rfdLxzkKa-XK/exec"; // ← ВСТАВЬ СЮДА СВОЙ
           const userId = window.Telegram.WebApp.initDataUnsafe?.user?.id;
           const ascHouse = result.asc_house;
-        
-          console.log("🚀 Попытка отправки в Google Apps Script:", { userId, ascHouse });
-        
+      
           if (userId && ascHouse !== undefined) {
-            const formData = new URLSearchParams();
-            formData.append("userId", userId);
-            formData.append("asc_house", ascHouse);
-        
             fetch(scriptUrl, {
               method: "POST",
-              mode: "no-cors",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
-              body: formData.toString()
-            });
-        
-            console.log("✅ Запрос на запись asc_house отправлен");
-          } else {
-            console.warn("⚠️ Недостаточно данных для отправки в Google Sheets");
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId, asc_house: ascHouse })
+            })
+            .then(r => console.log("📤 Отправлено в Google Apps Script:", r.status));
           }
         } catch (err) {
-          console.error("❌ Ошибка при отправке asc_house в Google Sheets:", err);
-        }        
+          console.warn("❌ Ошибка отправки в Google Sheets:", err);
+        }
     }
   
       function showError(message) {
