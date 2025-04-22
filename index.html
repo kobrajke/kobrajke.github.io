@@ -56,7 +56,6 @@
         }
       });      
     document.getElementById('calculateBtn').addEventListener('click', async function() {
-        const chatId = Telegram.WebApp.initDataUnsafe.user?.id;
         const userName = document.getElementById('userName').value.trim();
         const birthDateTime = document.getElementById('birthDateTime').value;
         const targetYear = parseInt(document.getElementById('targetYear').value);
@@ -77,8 +76,7 @@
                     birthDateTime: birthDateTime,
                     targetYear: targetYear,
                     birthCity: birthCity,
-                    residenceCity: residenceCity,
-                    chat_id: chatId // Добавляем chat_id в запрос
+                    residenceCity: residenceCity
                 })
             });
 
@@ -118,28 +116,26 @@
   
         errorEl.classList.remove('show');
         errorEl.style.display = 'none';
+
+          // 📨 Отправка результата в Telegram через WebApp
+        const telegramMessage = `
+        🌞 <b>Результаты расчета Соляра</b>
         
-        const telegramMessage = formatTelegramMessage(result);
-        if (window.Telegram?.WebApp?.sendData) {
+    <b>Имя:</b> ${result.user_name}
+    <b>Дата рождения:</b> ${result.birth_date}
+    <b>Город рождения:</b> ${result.birth_city}
+    <b>Город проживания:</b> ${result.residence_city}
+    <b>Соляр (UTC):</b> ${result.solar_date_utc}
+    <b>Местное время:</b> ${result.solar_date_local}
+    <b>1 дом Соляра:</b> ${result.asc_house} дом Радикса (Натала)
+            `.trim();
+        
+            if (window.Telegram?.WebApp?.sendData) {
             window.Telegram.WebApp.sendData(telegramMessage);
-        }
-
+            }
       }
-    function formatTelegramMessage(result) {
-        return `
-🌞 <b>Результат расчета соляра</b>
-
-<b>Имя:</b> ${result.user_name}
-<b>Дата рождения:</b> ${result.birth_date}
-<b>Город рождения:</b> ${result.birth_city}
-<b>Город проживания:</b> ${result.residence_city}
-<b>Соляр (UTC):</b> ${result.solar_date_utc}
-<b>Местное время:</b> ${result.solar_date_local}
-<b>1 дом Соляра:</b> ${result.asc_house} дом Радикса (Натала)
-        `.trim();
-    }
   
-    function showError(message) {
+      function showError(message) {
         const errorEl = document.getElementById('error');
         const resultEl = document.getElementById('result');
   
@@ -149,14 +145,14 @@
   
         resultEl.classList.remove('show');
         resultEl.style.display = 'none';
-    }
+      }
       document.addEventListener('keydown', function (event) {
         const isInputFocused = document.activeElement.tagName === 'INPUT';
         if (isInputFocused && event.key === 'Enter') {
           event.preventDefault();
           document.getElementById('calculateBtn').click();
-      }
-    });
+        }
+      });
 
 </script>
 </body>
