@@ -46,66 +46,78 @@
         <div id="error" class="error" style="display: none;"></div>
       </div>      
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const tg = window.Telegram?.WebApp;
-        tg?.expand();
-      
-        if (tg?.colorScheme === "dark") {
-          document.body.classList.add("dark-theme");
-        }
-      });      
-    document.getElementById('calculateBtn').addEventListener('click', async function() {
-        const userName = document.getElementById('userName').value.trim();
-        const birthDateTime = document.getElementById('birthDateTime').value;
-        const targetYear = parseInt(document.getElementById('targetYear').value);
-        const birthCity = document.getElementById('birthCity').value.trim();
-        const residenceCity = document.getElementById('residenceCity').value.trim();
+      <script>
+        // При загрузке расширяем WebApp и включаем тёмную тему
+        document.addEventListener("DOMContentLoaded", () => {
+          const tg = window.Telegram?.WebApp;
+          tg?.expand();
+          if (tg?.colorScheme === "dark") {
+            document.body.classList.add("dark-theme");
+          }
+        });
     
-        if (!userName || !birthDateTime || !targetYear || !birthCity || !residenceCity) {
-          showError('❌ Заполните все поля');
-          return;
-        }
-
-        try {
+        // Нажатие Enter → клик кнопки
+        document.addEventListener("keydown", (e) => {
+          if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
+            e.preventDefault();
+            document.getElementById('calculateBtn').click();
+          }
+        });
+    
+        // Кнопка "Рассчитать"
+        document.getElementById('calculateBtn').addEventListener('click', async () => {
+          // Сбор полей
+          const userName      = document.getElementById('userName').value.trim();
+          const birthDateTime = document.getElementById('birthDateTime').value;
+          const targetYear    = parseInt(document.getElementById('targetYear').value);
+          const birthCity     = document.getElementById('birthCity').value.trim();
+          const residenceCity = document.getElementById('residenceCity').value.trim();
+    
+          if (!userName || !birthDateTime || !targetYear || !birthCity || !residenceCity) {
+            return showError('❌ Заполните все поля');
+          }
+    
+          try {
             const tg = window.Telegram?.WebApp;
             tg?.expand();
-            
-            const userId = tg?.initDataUnsafe?.user?.id ?? null;
+    
+            // Отправляем на сервер бота
             const response = await fetch('https://ravnovec-bot.onrender.com/calculate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userName: userName,
-                    birthDateTime: birthDateTime,
-                    targetYear: targetYear,
-                    birthCity: birthCity,
-                    residenceCity: residenceCity,
-                    userId 
-                })
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userName,
+                birthDateTime,
+                targetYear,
+                birthCity,
+                residenceCity,
+                userId: tg?.initDataUnsafe?.user?.id
+              })
             });
-
+    
             if (!response.ok) {
-                showError('Ошибка на сервере: ' + response.statusText);
-                return;
+              return showError('Ошибка на сервере: ' + response.statusText);
             }
-
+    
             const data = await response.json();
             if (data.success) {
-                showResult(data.result);
+              showResult(data.result);
             } else {
-                showError(data.error || 'Ошибка расчета');
+              showError(data.error || 'Ошибка расчета');
             }
-        } catch (e) {
+    
+          } catch (e) {
             showError('❌ Ошибка соединения с сервером');
-        }
-    });
-
-    function showResult(result) {
-        const resultEl = document.getElementById('result');
-        const errorEl = document.getElementById('error');
-  
-        resultEl.innerHTML = `
+          }
+        });
+    
+        // Функция отображения результата и отправки в бот
+        function showResult(result) {
+          const resultEl = document.getElementById('result');
+          const errorEl  = document.getElementById('error');
+    
+          // Отрисовка
+          resultEl.innerHTML = `
             <h3>Результаты расчета:</h3>
             <p>Имя: ${result.user_name}</p>
             <p>Дата рождения: ${result.birth_date}</p>
@@ -114,51 +126,32 @@
             <p>Соляр наступит (UTC): ${result.solar_date_utc}</p>
             <p>Местное время: ${result.solar_date_local}</p>
             <p>1 дом Соляра: ${result.asc_house} дом Радикса (Натала)</p>
-        `;
-
-        resultEl.classList.add('show');
-        resultEl.style.display = 'block';
-  
-        errorEl.classList.remove('show');
-        errorEl.style.display = 'none';
-        
-        try {
-          const scriptUrl = "https://script.google.com/macros/s/AKfycbzvHm_xDUpe6ptKiJaQGw1sylrYYKXX6dzsGFAGZe06rOkcGr2LPUe6rfdLxzkKa-XK/exec"; // ← ВСТАВЬ СЮДА СВОЙ
-          const userId = window.Telegram.WebApp.initDataUnsafe?.user?.id;
+          `;
+          resultEl.classList.add('show');
+          resultEl.style.display = 'block';
+          errorEl.classList.remove('show');
+          errorEl.style.display = 'none';
+    
+          // Отправляем JSON обратно в бота
+          const tg = window.Telegram?.WebApp;
+          const userId   = tg?.initDataUnsafe?.user?.id;
           const ascHouse = result.asc_house;
-      
-          if (userId && ascHouse !== undefined) {
-            fetch(scriptUrl, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ userId, asc_house: ascHouse })
-            })
-            .then(r => console.log("📤 Отправлено в Google Apps Script:", r.status));
+    
+          if (tg?.sendData && userId && ascHouse != null) {
+            tg.sendData(JSON.stringify({ userId, asc_house: ascHouse }));
           }
-        } catch (err) {
-          console.warn("❌ Ошибка отправки в Google Sheets:", err);
         }
-    }
-  
-      function showError(message) {
-        const errorEl = document.getElementById('error');
-        const resultEl = document.getElementById('result');
-  
-        errorEl.textContent = `❌ Ошибка: ${message}`;
-        errorEl.classList.add('show');
-        errorEl.style.display = 'block';
-  
-        resultEl.classList.remove('show');
-        resultEl.style.display = 'none';
-      }
-      document.addEventListener('keydown', function (event) {
-        const isInputFocused = document.activeElement.tagName === 'INPUT';
-        if (isInputFocused && event.key === 'Enter') {
-          event.preventDefault();
-          document.getElementById('calculateBtn').click();
+    
+        // Функция отображения ошибки
+        function showError(message) {
+          const errorEl  = document.getElementById('error');
+          const resultEl = document.getElementById('result');
+          errorEl.textContent = message;
+          errorEl.classList.add('show');
+          errorEl.style.display = 'block';
+          resultEl.classList.remove('show');
+          resultEl.style.display = 'none';
         }
-      });
-
-</script>
+      </script>
 </body>
 </html>
