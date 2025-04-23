@@ -47,110 +47,58 @@
       </div>      
 
       <script>
-        // При загрузке расширяем WebApp и включаем тёмную тему
         document.addEventListener("DOMContentLoaded", () => {
-          const tg = window.Telegram?.WebApp;
-          tg?.expand();
-          if (tg?.colorScheme === "dark") {
+          const tg = window.Telegram.WebApp;
+          tg.expand();
+          if (tg.colorScheme === "dark") {
             document.body.classList.add("dark-theme");
           }
         });
-    
-        // Нажатие Enter → клик кнопки
-        document.addEventListener("keydown", (e) => {
+      
+        // Enter → клик
+        document.addEventListener("keydown", e => {
           if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
             e.preventDefault();
             document.getElementById('calculateBtn').click();
           }
         });
-    
-        // Кнопка "Рассчитать"
-        document.getElementById('calculateBtn').addEventListener('click', async () => {
-          // Сбор полей
-          const userName      = document.getElementById('userName').value.trim();
-          const birthDateTime = document.getElementById('birthDateTime').value;
-          const targetYear    = parseInt(document.getElementById('targetYear').value);
-          const birthCity     = document.getElementById('birthCity').value.trim();
-          const residenceCity = document.getElementById('residenceCity').value.trim();
-    
-          if (!userName || !birthDateTime || !targetYear || !birthCity || !residenceCity) {
+      
+        document.getElementById('calculateBtn').addEventListener('click', () => {
+          const tg = window.Telegram.WebApp;
+      
+          // Сбор данных
+          const payload = {
+            action: "calculate",
+            userName:      document.getElementById('userName').value.trim(),
+            birthDateTime: document.getElementById('birthDateTime').value,
+            targetYear:    parseInt(document.getElementById('targetYear').value),
+            birthCity:     document.getElementById('birthCity').value.trim(),
+            residenceCity: document.getElementById('residenceCity').value.trim(),
+          };
+      
+          // Проверка
+          if (!payload.userName ||
+              !payload.birthDateTime ||
+              !payload.targetYear ||
+              !payload.birthCity ||
+              !payload.residenceCity) {
             return showError('❌ Заполните все поля');
           }
-    
-          try {
-            const tg = window.Telegram?.WebApp;
-            tg?.expand();
-    
-            // Отправляем на сервер бота
-            const response = await fetch('https://ravnovec-bot.onrender.com/calculate', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userName,
-                birthDateTime,
-                targetYear,
-                birthCity,
-                residenceCity,
-                userId: tg?.initDataUnsafe?.user?.id
-              })
-            });
-    
-            if (!response.ok) {
-              return showError('Ошибка на сервере: ' + response.statusText);
-            }
-    
-            const data = await response.json();
-            if (data.success) {
-              showResult(data.result);
-            } else {
-              showError(data.error || 'Ошибка расчета');
-            }
-    
-          } catch (e) {
-            showError('❌ Ошибка соединения с сервером');
-          }
+      
+          // Шлём всё боту, WebApp остаётся открытым
+          tg.sendData(JSON.stringify(payload));
         });
-    
-        // Функция отображения результата и отправки в бот
+      
         function showResult(result) {
-          const resultEl = document.getElementById('result');
-          const errorEl  = document.getElementById('error');
-    
-          // Отрисовка
-          resultEl.innerHTML = `
-            <h3>Результаты расчета:</h3>
-            <p>Имя: ${result.user_name}</p>
-            <p>Дата рождения: ${result.birth_date}</p>
-            <p>Место рождения: ${result.birth_city}</p>
-            <p>Место проживания: ${result.residence_city}</p>
-            <p>Соляр наступит (UTC): ${result.solar_date_utc}</p>
-            <p>Местное время: ${result.solar_date_local}</p>
-            <p>1 дом Соляра: ${result.asc_house} дом Радикса (Натала)</p>
-          `;
-          resultEl.classList.add('show');
-          resultEl.style.display = 'block';
-          errorEl.classList.remove('show');
-          errorEl.style.display = 'none';
-    
-          // Отправляем JSON обратно в бота
-          const tg = window.Telegram?.WebApp;
-          const userId   = tg?.initDataUnsafe?.user?.id;
-          const ascHouse = result.asc_house;
-    
-          if (tg?.sendData && userId && ascHouse != null) {
-            tg.sendData(JSON.stringify({ userId, asc_house: ascHouse }));
-          }
+          /* не используется: результат пойдёт в чат */
         }
-    
-        // Функция отображения ошибки
+      
         function showError(message) {
           const errorEl  = document.getElementById('error');
           const resultEl = document.getElementById('result');
           errorEl.textContent = message;
           errorEl.classList.add('show');
-          errorEl.style.display = 'block';
           resultEl.classList.remove('show');
-          resultEl.style.display = 'none';
         }
       </script>
 </body>
