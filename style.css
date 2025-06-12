@@ -186,27 +186,32 @@ body.dark-theme .error {
   animation: fadeIn 0.3s ease-out;
 }
 
-.button-link {
+.btn {
   display: inline-block;
-  width: 100%;
-  text-align: center;
-  background-color: var(--primary-color);
-  color: white;
   padding: 14px;
-  border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
   text-decoration: none;
-  transition: background-color 0.2s ease;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
   letter-spacing: 0.2px;
-  margin-top: 20px;
 }
 
-.button-link:hover {
+.btn:hover {
   background-color: #1a6ed2;
   box-shadow: 0 3px 10px rgba(44, 123, 229, 0.15);
 }
 
-.button-link:active {
+.btn:active {
   transform: scale(0.98);
+}
+
+.btn-fullwidth {
+  width: 100%;
+  margin-top: 20px;
 }
